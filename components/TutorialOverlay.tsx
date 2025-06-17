@@ -44,6 +44,7 @@ export function TutorialOverlay({
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const sparkleAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
@@ -85,12 +86,28 @@ export function TutorialOverlay({
           }),
         ])
       ).start();
+
+      // Sparkle animation for extra magic
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(sparkleAnim, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(sparkleAnim, {
+            toValue: 0,
+            duration: 2000,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
     } else {
       fadeAnim.setValue(0);
     }
-  }, [visible, bounceAnim, pulseAnim, fadeAnim]);
+  }, [visible, bounceAnim, pulseAnim, fadeAnim, sparkleAnim]);
 
-  if (!visible) return null;
+  if (!visible || !currentStep) return null;
 
   const getArrowStyle = () => {
     if (!currentStep.targetElement || !currentStep.arrowDirection) return {};
@@ -196,7 +213,30 @@ export function TutorialOverlay({
       
       {/* Spotlight highlight */}
       {currentStep.targetElement && (
-        <Animated.View style={[styles.spotlight, getHighlightStyle()]} />
+        <Animated.View style={[styles.spotlight, getHighlightStyle()]}>
+          {/* Sparkle effects around the highlight */}
+          <Animated.View style={[
+            styles.sparkle,
+            styles.sparkle1,
+            { opacity: sparkleAnim }
+          ]}>
+            <Text style={styles.sparkleText}>✨</Text>
+          </Animated.View>
+          <Animated.View style={[
+            styles.sparkle,
+            styles.sparkle2,
+            { opacity: sparkleAnim }
+          ]}>
+            <Text style={styles.sparkleText}>✨</Text>
+          </Animated.View>
+          <Animated.View style={[
+            styles.sparkle,
+            styles.sparkle3,
+            { opacity: sparkleAnim }
+          ]}>
+            <Text style={styles.sparkleText}>✨</Text>
+          </Animated.View>
+        </Animated.View>
       )}
 
       {/* Bouncing arrow pointer */}
@@ -284,6 +324,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 20,
     elevation: 10,
+  },
+  sparkle: {
+    position: 'absolute',
+  },
+  sparkle1: {
+    top: -10,
+    right: -10,
+  },
+  sparkle2: {
+    bottom: -10,
+    left: -10,
+  },
+  sparkle3: {
+    top: '50%',
+    right: -15,
+  },
+  sparkleText: {
+    fontSize: 16,
+    color: '#F1C40F',
   },
   arrow: {
     width: 40,

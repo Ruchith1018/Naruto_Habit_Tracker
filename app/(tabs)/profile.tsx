@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { Settings, CreditCard as Edit, Award, Calendar, Target, Flame } from 'lucide-react-native';
+import { Settings, CreditCard as Edit, Award, Calendar, Target, Flame, Crown } from 'lucide-react-native';
+import { VillageLeaderboard } from '@/components/VillageLeaderboard';
 import { useGameData } from '@/hooks/useGameData';
 import { getCurrentRank, NINJA_RANKS } from '@/data/gameData';
 
@@ -75,6 +76,13 @@ export default function Profile() {
             <Text style={styles.statLabel}>Experience</Text>
           </View>
         </View>
+      </View>
+
+      <View style={styles.villageLeaderboardSection}>
+        <VillageLeaderboard 
+          userVillage="leaf" 
+          userContribution={userStats.experience}
+        />
       </View>
 
       <View style={styles.villageSection}>
@@ -261,6 +269,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter-Regular',
     color: '#BDC3C7',
+  },
+  villageLeaderboardSection: {
+    marginBottom: 20,
   },
   villageSection: {
     paddingHorizontal: 20,

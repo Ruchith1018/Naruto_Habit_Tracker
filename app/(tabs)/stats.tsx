@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ChartBar as BarChart3, TrendingUp, Award, Zap } from 'lucide-react-native';
 import { StatWheel } from '@/components/StatWheel';
 import { JutsuActivation } from '@/components/JutsuActivation';
+import { AchievementSystem } from '@/components/AchievementSystem';
 import { useGameData } from '@/hooks/useGameData';
 import { getCurrentRank } from '@/data/gameData';
 
 export default function Stats() {
-  const { userStats, jutsuList, activateJutsu } = useGameData();
+  const { userStats, jutsuList, missions, activateJutsu } = useGameData();
   const currentRank = getCurrentRank(userStats.experience);
   const unlockedJutsu = jutsuList.filter(jutsu => jutsu.unlocked);
 
@@ -34,9 +35,14 @@ export default function Stats() {
     .reduce((sum, value) => sum + (value as number), 0);
 
   const handleJutsuActivation = (jutsuId: string) => {
-    // In a real app, this would trigger the jutsu effect
+    activateJutsu(jutsuId);
+    // Add visual feedback or effects here
     console.log(`Activated jutsu: ${jutsuId}`);
-    // You could add visual effects, temporary stat boosts, etc.
+  };
+
+  const handleAchievementUnlocked = (achievement: any) => {
+    // Handle achievement unlock (could add XP bonus, etc.)
+    console.log(`Achievement unlocked: ${achievement.title}`);
   };
 
   return (
@@ -123,26 +129,12 @@ export default function Stats() {
         )}
       </View>
 
-      <View style={styles.achievementsSection}>
-        <View style={styles.achievementHeader}>
-          <Award size={24} color="#E67E22" />
-          <Text style={styles.sectionTitle}>Achievements</Text>
-        </View>
-        <View style={styles.achievementsList}>
-          <View style={styles.achievementCard}>
-            <Text style={styles.achievementTitle}>🥇 First Steps</Text>
-            <Text style={styles.achievementDesc}>Complete your first mission</Text>
-          </View>
-          <View style={styles.achievementCard}>
-            <Text style={styles.achievementTitle}>🔥 On Fire</Text>
-            <Text style={styles.achievementDesc}>Maintain a 7-day streak</Text>
-          </View>
-          <View style={styles.achievementCard}>
-            <Text style={styles.achievementTitle}>📚 Scholar</Text>
-            <Text style={styles.achievementDesc}>Reach 100 Intelligence</Text>
-          </View>
-        </View>
-      </View>
+      <AchievementSystem
+        userStats={userStats}
+        missions={missions}
+        jutsuList={jutsuList}
+        onAchievementUnlocked={handleAchievementUnlocked}
+      />
     </ScrollView>
   );
 }
@@ -277,35 +269,5 @@ const styles = StyleSheet.create({
   },
   jutsuList: {
     gap: 12,
-  },
-  achievementsSection: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  achievementHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  achievementsList: {
-    gap: 12,
-  },
-  achievementCard: {
-    backgroundColor: '#34495E',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#4A5568',
-  },
-  achievementTitle: {
-    fontSize: 16,
-    fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
-    marginBottom: 4,
-  },
-  achievementDesc: {
-    fontSize: 14,
-    fontFamily: 'Inter-Regular',
-    color: '#BDC3C7',
   },
 });
