@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Plus, Filter } from 'lucide-react-native';
 import { MissionCard } from '@/components/MissionCard';
+import { TutorialManager } from '@/components/TutorialManager';
 import { useGameData } from '@/hooks/useGameData';
 
 export default function Missions() {
@@ -18,69 +19,71 @@ export default function Missions() {
   const totalCount = missions.length;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Mission Board</Text>
-        <Text style={styles.subtitle}>
-          {completedCount} of {totalCount} missions completed
-        </Text>
-        
-        <View style={styles.filterContainer}>
-          <TouchableOpacity
-            style={[styles.filterButton, filter === 'all' && styles.activeFilter]}
-            onPress={() => setFilter('all')}
-          >
-            <Text style={[styles.filterText, filter === 'all' && styles.activeFilterText]}>
-              All ({totalCount})
-            </Text>
-          </TouchableOpacity>
+    <TutorialManager tutorialId="missions" autoStart={false}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Mission Board</Text>
+          <Text style={styles.subtitle}>
+            {completedCount} of {totalCount} missions completed
+          </Text>
           
-          <TouchableOpacity
-            style={[styles.filterButton, filter === 'active' && styles.activeFilter]}
-            onPress={() => setFilter('active')}
-          >
-            <Text style={[styles.filterText, filter === 'active' && styles.activeFilterText]}>
-              Active ({totalCount - completedCount})
-            </Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={[styles.filterButton, filter === 'completed' && styles.activeFilter]}
-            onPress={() => setFilter('completed')}
-          >
-            <Text style={[styles.filterText, filter === 'completed' && styles.activeFilterText]}>
-              Done ({completedCount})
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView style={styles.missionsList} showsVerticalScrollIndicator={false}>
-        {filteredMissions.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No missions found</Text>
-            <Text style={styles.emptySubtext}>
-              {filter === 'completed' 
-                ? 'Complete some missions to see them here'
-                : 'All missions are completed! Great work, ninja!'
-              }
-            </Text>
+          <View style={styles.filterContainer}>
+            <TouchableOpacity
+              style={[styles.filterButton, filter === 'all' && styles.activeFilter]}
+              onPress={() => setFilter('all')}
+            >
+              <Text style={[styles.filterText, filter === 'all' && styles.activeFilterText]}>
+                All ({totalCount})
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.filterButton, filter === 'active' && styles.activeFilter]}
+              onPress={() => setFilter('active')}
+            >
+              <Text style={[styles.filterText, filter === 'active' && styles.activeFilterText]}>
+                Active ({totalCount - completedCount})
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.filterButton, filter === 'completed' && styles.activeFilter]}
+              onPress={() => setFilter('completed')}
+            >
+              <Text style={[styles.filterText, filter === 'completed' && styles.activeFilterText]}>
+                Done ({completedCount})
+              </Text>
+            </TouchableOpacity>
           </View>
-        ) : (
-          filteredMissions.map(mission => (
-            <MissionCard
-              key={mission.id}
-              mission={mission}
-              onToggle={toggleMission}
-            />
-          ))
-        )}
-      </ScrollView>
+        </View>
 
-      <TouchableOpacity style={styles.addButton}>
-        <Plus size={24} color="#FFFFFF" />
-      </TouchableOpacity>
-    </View>
+        <ScrollView style={styles.missionsList} showsVerticalScrollIndicator={false}>
+          {filteredMissions.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No missions found</Text>
+              <Text style={styles.emptySubtext}>
+                {filter === 'completed' 
+                  ? 'Complete some missions to see them here'
+                  : 'All missions are completed! Great work, ninja!'
+                }
+              </Text>
+            </View>
+          ) : (
+            filteredMissions.map(mission => (
+              <MissionCard
+                key={mission.id}
+                mission={mission}
+                onToggle={toggleMission}
+              />
+            ))
+          )}
+        </ScrollView>
+
+        <TouchableOpacity style={styles.addButton}>
+          <Plus size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+    </TutorialManager>
   );
 }
 

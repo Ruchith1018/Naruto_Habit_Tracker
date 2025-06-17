@@ -24,6 +24,8 @@ export interface Jutsu {
   requiredStat: string;
   requiredValue: number;
   effect: string;
+  cooldownHours: number;
+  lastUsed?: Date;
   unlocked: boolean;
 }
 
@@ -115,37 +117,51 @@ export const JUTSU_LIST: Jutsu[] = [
   {
     id: '1',
     name: 'Shadow Clone Technique',
-    description: 'Complete multiple missions simultaneously',
+    description: 'Create shadow clones to help with multiple tasks',
     requiredStat: 'Chakra',
-    requiredValue: 300,
-    effect: 'Double mission rewards for 1 hour',
+    requiredValue: 100,
+    effect: 'Complete 2 missions simultaneously for the next hour',
+    cooldownHours: 24,
     unlocked: false,
   },
   {
     id: '2',
     name: 'Leaf Hurricane',
-    description: 'Protect your mission streaks from breaking',
+    description: 'Protect your mission streaks with powerful winds',
     requiredStat: 'Strength',
-    requiredValue: 200,
-    effect: 'Streak protection for 24 hours',
+    requiredValue: 80,
+    effect: 'Streak protection - prevents streak loss for 24 hours',
+    cooldownHours: 48,
     unlocked: false,
   },
   {
     id: '3',
     name: 'Mind Transfer Jutsu',
-    description: 'Skip one mission without breaking your streak',
+    description: 'Transfer your consciousness to skip difficult tasks',
     requiredStat: 'Intelligence',
-    requiredValue: 300,
-    effect: 'Skip one mission per week',
+    requiredValue: 120,
+    effect: 'Skip one mission without breaking your streak',
+    cooldownHours: 168, // 1 week
     unlocked: false,
   },
   {
     id: '4',
     name: 'Body Flicker Technique',
-    description: 'Complete missions faster',
+    description: 'Move at incredible speed to complete tasks faster',
     requiredStat: 'Agility',
-    requiredValue: 250,
-    effect: 'Reduce mission cooldown by 50%',
+    requiredValue: 90,
+    effect: 'Reduce all mission cooldowns by 50% for 2 hours',
+    cooldownHours: 72,
+    unlocked: false,
+  },
+  {
+    id: '5',
+    name: 'Rasengan',
+    description: 'Channel your chakra into a powerful spinning sphere',
+    requiredStat: 'Chakra',
+    requiredValue: 200,
+    effect: 'Double XP and stat gains for the next 3 missions',
+    cooldownHours: 48,
     unlocked: false,
   },
 ];

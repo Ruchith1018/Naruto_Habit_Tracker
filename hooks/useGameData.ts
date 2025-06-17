@@ -80,6 +80,20 @@ export function useGameData() {
     );
   };
 
+  const activateJutsu = (jutsuId: string) => {
+    setJutsuList(prevJutsu =>
+      prevJutsu.map(jutsu => {
+        if (jutsu.id === jutsuId && jutsu.unlocked) {
+          return {
+            ...jutsu,
+            lastUsed: new Date(),
+          };
+        }
+        return jutsu;
+      })
+    );
+  };
+
   useEffect(() => {
     checkUnlockedJutsu();
   }, [userStats]);
@@ -101,6 +115,7 @@ export function useGameData() {
     missions,
     jutsuList,
     toggleMission,
+    activateJutsu,
     getCompletedMissionsToday,
     getTotalActiveStreaks,
   };

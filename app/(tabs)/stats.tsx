@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ChartBar as BarChart3, TrendingUp, Award, Zap } from 'lucide-react-native';
 import { StatWheel } from '@/components/StatWheel';
+import { JutsuActivation } from '@/components/JutsuActivation';
 import { useGameData } from '@/hooks/useGameData';
 import { getCurrentRank } from '@/data/gameData';
 
 export default function Stats() {
-  const { userStats, jutsuList } = useGameData();
+  const { userStats, jutsuList, activateJutsu } = useGameData();
   const currentRank = getCurrentRank(userStats.experience);
   const unlockedJutsu = jutsuList.filter(jutsu => jutsu.unlocked);
 
@@ -31,6 +32,12 @@ export default function Stats() {
   const totalStats = Object.values(userStats)
     .filter((value, index) => index < 6) // Only count the 6 main stats
     .reduce((sum, value) => sum + (value as number), 0);
+
+  const handleJutsuActivation = (jutsuId: string) => {
+    // In a real app, this would trigger the jutsu effect
+    console.log(`Activated jutsu: ${jutsuId}`);
+    // You could add visual effects, temporary stat boosts, etc.
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -94,23 +101,23 @@ export default function Stats() {
       <View style={styles.jutsuSection}>
         <View style={styles.jutsuHeader}>
           <Zap size={24} color="#F1C40F" />
-          <Text style={styles.sectionTitle}>Unlocked Jutsu</Text>
+          <Text style={styles.sectionTitle}>Jutsu Collection</Text>
         </View>
-        {unlockedJutsu.length === 0 ? (
+        {jutsuList.length === 0 ? (
           <View style={styles.emptyJutsu}>
-            <Text style={styles.emptyText}>No jutsu unlocked yet</Text>
+            <Text style={styles.emptyText}>No jutsu available yet</Text>
             <Text style={styles.emptySubtext}>
               Increase your stats to unlock powerful techniques
             </Text>
           </View>
         ) : (
           <View style={styles.jutsuList}>
-            {unlockedJutsu.map(jutsu => (
-              <View key={jutsu.id} style={styles.jutsuCard}>
-                <Text style={styles.jutsuName}>{jutsu.name}</Text>
-                <Text style={styles.jutsuDescription}>{jutsu.description}</Text>
-                <Text style={styles.jutsuEffect}>{jutsu.effect}</Text>
-              </View>
+            {jutsuList.map(jutsu => (
+              <JutsuActivation
+                key={jutsu.id}
+                jutsu={jutsu}
+                onActivate={handleJutsuActivation}
+              />
             ))}
           </View>
         )}
@@ -270,30 +277,6 @@ const styles = StyleSheet.create({
   },
   jutsuList: {
     gap: 12,
-  },
-  jutsuCard: {
-    backgroundColor: '#34495E',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#F1C40F',
-  },
-  jutsuName: {
-    fontSize: 16,
-    fontFamily: 'Inter-Bold',
-    color: '#F1C40F',
-    marginBottom: 4,
-  },
-  jutsuDescription: {
-    fontSize: 14,
-    fontFamily: 'Inter-Regular',
-    color: '#FFFFFF',
-    marginBottom: 4,
-  },
-  jutsuEffect: {
-    fontSize: 12,
-    fontFamily: 'Inter-Regular',
-    color: '#BDC3C7',
   },
   achievementsSection: {
     paddingHorizontal: 20,

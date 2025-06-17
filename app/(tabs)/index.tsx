@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { Star, Flame, Target, TrendingUp } from 'lucide-react-native';
 import { StatWheel } from '@/components/StatWheel';
+import { TutorialManager } from '@/components/TutorialManager';
 import { useGameData } from '@/hooks/useGameData';
 import { getCurrentRank, getNextRank } from '@/data/gameData';
 
@@ -19,115 +20,117 @@ export default function Dashboard() {
     : 100;
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <LinearGradient
-        colors={['#2C3E50', '#34495E', '#4A5568']}
-        style={styles.header}
-      >
-        <View style={styles.rankContainer}>
-          <Text style={styles.rankBadge}>{currentRank.badge}</Text>
-          <View style={styles.rankInfo}>
-            <Text style={styles.rankName}>{currentRank.name}</Text>
-            <Text style={styles.experienceText}>{userStats.experience} XP</Text>
-          </View>
-        </View>
-
-        {nextRank && (
-          <View style={styles.progressContainer}>
-            <Text style={styles.progressLabel}>
-              Progress to {nextRank.name}: {Math.round(progressToNextRank)}%
-            </Text>
-            <View style={styles.progressBar}>
-              <View 
-                style={[
-                  styles.progressFill, 
-                  { width: `${progressToNextRank}%`, backgroundColor: nextRank.color }
-                ]} 
-              />
+    <TutorialManager tutorialId="dashboard" autoStart={true}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <LinearGradient
+          colors={['#2C3E50', '#34495E', '#4A5568']}
+          style={styles.header}
+        >
+          <View style={styles.rankContainer}>
+            <Text style={styles.rankBadge}>{currentRank.badge}</Text>
+            <View style={styles.rankInfo}>
+              <Text style={styles.rankName}>{currentRank.name}</Text>
+              <Text style={styles.experienceText}>{userStats.experience} XP</Text>
             </View>
-            <Text style={styles.nextRankText}>
-              {nextRank.minExperience - userStats.experience} XP needed
-            </Text>
           </View>
-        )}
-      </LinearGradient>
 
-      <View style={styles.statsGrid}>
-        <Text style={styles.sectionTitle}>Ninja Attributes</Text>
-        <View style={styles.statsRow}>
-          <StatWheel
-            label="Chakra"
-            value={userStats.chakra}
-            maxValue={1000}
-            color="#3498DB"
-          />
-          <StatWheel
-            label="Strength"
-            value={userStats.strength}
-            maxValue={1000}
-            color="#E74C3C"
-          />
-          <StatWheel
-            label="Intelligence"
-            value={userStats.intelligence}
-            maxValue={1000}
-            color="#9B59B6"
-          />
+          {nextRank && (
+            <View style={styles.progressContainer}>
+              <Text style={styles.progressLabel}>
+                Progress to {nextRank.name}: {Math.round(progressToNextRank)}%
+              </Text>
+              <View style={styles.progressBar}>
+                <View 
+                  style={[
+                    styles.progressFill, 
+                    { width: `${progressToNextRank}%`, backgroundColor: nextRank.color }
+                  ]} 
+                />
+              </View>
+              <Text style={styles.nextRankText}>
+                {nextRank.minExperience - userStats.experience} XP needed
+              </Text>
+            </View>
+          )}
+        </LinearGradient>
+
+        <View style={styles.statsGrid}>
+          <Text style={styles.sectionTitle}>Ninja Attributes</Text>
+          <View style={styles.statsRow}>
+            <StatWheel
+              label="Chakra"
+              value={userStats.chakra}
+              maxValue={1000}
+              color="#3498DB"
+            />
+            <StatWheel
+              label="Strength"
+              value={userStats.strength}
+              maxValue={1000}
+              color="#E74C3C"
+            />
+            <StatWheel
+              label="Intelligence"
+              value={userStats.intelligence}
+              maxValue={1000}
+              color="#9B59B6"
+            />
+          </View>
+          <View style={styles.statsRow}>
+            <StatWheel
+              label="Agility"
+              value={userStats.agility}
+              maxValue={1000}
+              color="#2ECC71"
+            />
+            <StatWheel
+              label="Stamina"
+              value={userStats.stamina}
+              maxValue={1000}
+              color="#F39C12"
+            />
+            <StatWheel
+              label="Charisma"
+              value={userStats.charisma}
+              maxValue={1000}
+              color="#1ABC9C"
+            />
+          </View>
         </View>
-        <View style={styles.statsRow}>
-          <StatWheel
-            label="Agility"
-            value={userStats.agility}
-            maxValue={1000}
-            color="#2ECC71"
-          />
-          <StatWheel
-            label="Stamina"
-            value={userStats.stamina}
-            maxValue={1000}
-            color="#F39C12"
-          />
-          <StatWheel
-            label="Charisma"
-            value={userStats.charisma}
-            maxValue={1000}
-            color="#1ABC9C"
-          />
+
+        <View style={styles.summaryGrid}>
+          <TouchableOpacity style={[styles.summaryCard, styles.todayCard]}>
+            <Target size={24} color="#FF6B35" />
+            <Text style={styles.summaryValue}>{completedToday}</Text>
+            <Text style={styles.summaryLabel}>Missions Today</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.summaryCard, styles.streakCard]}>
+            <Flame size={24} color="#E74C3C" />
+            <Text style={styles.summaryValue}>{totalStreaks}</Text>
+            <Text style={styles.summaryLabel}>Active Streaks</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.summaryCard, styles.totalCard]}>
+            <Star size={24} color="#F1C40F" />
+            <Text style={styles.summaryValue}>{missions.length}</Text>
+            <Text style={styles.summaryLabel}>Total Missions</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.summaryCard, styles.levelCard]}>
+            <TrendingUp size={24} color="#9B59B6" />
+            <Text style={styles.summaryValue}>{userStats.level}</Text>
+            <Text style={styles.summaryLabel}>Ninja Level</Text>
+          </TouchableOpacity>
         </View>
-      </View>
 
-      <View style={styles.summaryGrid}>
-        <TouchableOpacity style={[styles.summaryCard, styles.todayCard]}>
-          <Target size={24} color="#FF6B35" />
-          <Text style={styles.summaryValue}>{completedToday}</Text>
-          <Text style={styles.summaryLabel}>Missions Today</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.summaryCard, styles.streakCard]}>
-          <Flame size={24} color="#E74C3C" />
-          <Text style={styles.summaryValue}>{totalStreaks}</Text>
-          <Text style={styles.summaryLabel}>Active Streaks</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.summaryCard, styles.totalCard]}>
-          <Star size={24} color="#F1C40F" />
-          <Text style={styles.summaryValue}>{missions.length}</Text>
-          <Text style={styles.summaryLabel}>Total Missions</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.summaryCard, styles.levelCard]}>
-          <TrendingUp size={24} color="#9B59B6" />
-          <Text style={styles.summaryValue}>{userStats.level}</Text>
-          <Text style={styles.summaryLabel}>Ninja Level</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          "The true measure of a ninja is not their power, but their dedication to improvement."
-        </Text>
-      </View>
-    </ScrollView>
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            "The true measure of a ninja is not their power, but their dedication to improvement."
+          </Text>
+        </View>
+      </ScrollView>
+    </TutorialManager>
   );
 }
 
